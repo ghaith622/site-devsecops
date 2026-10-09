@@ -1,0 +1,35 @@
+name: Lab 06 - Build et Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-site:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Installer les dependances
+        run: npm ci
+
+      - name: Construire le site
+        run: npm run build
+
+      - name: Verifier dist
+        run: ls -lah dist/
+
+      - name: Conserver artifact dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: dist/
+          retention-days: 7
